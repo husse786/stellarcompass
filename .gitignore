@@ -34,3 +34,6 @@ build/
 
 ### docs ###
 docs/Concept&Vision/
+
+### OS generated files ###
+.DS_Store
