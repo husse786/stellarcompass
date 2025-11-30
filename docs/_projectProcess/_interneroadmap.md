@@ -32,7 +32,7 @@
 
 ## 📅 PHASE 2: Der Pitch & Das Daten-Rückgrat (Woche 4 - 6)
 
-*Ziel: Der Pitch ist bestanden. Im Hintergrund läuft die Datenbank und der Login.*
+*Ziel: Der Pitch ist gehalten und die Grundstruktur der Daten & Security steht.*
 
 ### Woche 4: Pitch Fokus
 
