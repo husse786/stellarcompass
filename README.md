@@ -10,4 +10,8 @@ Eine digitale Schule für Frauen in Afghanistan.
 
 ## Use Case Diagramm
 
-![Use Case Diagramm](docs/uc_diagram.drawio.svg)
+**Beshreibung von Use Case** [Use Case Beschreibung](docs/use-case-description.md)
+
+![Use Case Diagramm](docs/visuals/uc_diagram.drawio.svg)
+
+![ER Diagramm](docs/visuals/er_diagram.drawio.svg)
