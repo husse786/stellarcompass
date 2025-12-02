@@ -3,6 +3,8 @@ package ch.zhaw.stellarcompass.repository;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -35,6 +37,23 @@ class UserRepositoryTest {
         assertNotNull(foundUser, "User should be found in the DB");
         assertEquals("Test User", foundUser.getName());
         assertEquals(UserRole.STUDENT, foundUser.getRole());
+
+        // Cleanup
+        userRepository.delete(savedUser);
+    }
+    @ParameterizedTest
+    @EnumSource(UserRole.class) // Test all enum values like STUDENT, Mentor, Admin
+    void testSaveUserWithRole(UserRole role){
+        // Arrange
+        String email = "test-" + role + "@stellar.com";
+        User user = new User(email, "Role Tester", role);
+
+        // Act
+        User savedUser = userRepository.save(user);
+
+        // Assert
+        assertNotNull(savedUser.getId());
+        assertEquals(role, savedUser.getRole());
 
         // Cleanup
         userRepository.delete(savedUser);
