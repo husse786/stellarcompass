@@ -46,17 +46,18 @@ public class LessonController {
         return ResponseEntity.ok(lesson);
     }
 
+    // Get lessons by subject ID
     @GetMapping("/subject/{subjectId}")
     public ResponseEntity<List<Lesson>> getLessonsBySubject(@PathVariable String subjectId) {
         return new ResponseEntity<>(lessonService.getLessonsBySubject(subjectId), HttpStatus.OK);
     }
-
+    // Update lesson which has valid id
     @PutMapping("/{id}")
     public ResponseEntity<Lesson> updateLesson(@PathVariable String id, @Valid @RequestBody LessonCreateDTO dto) { //validation added
         Lesson updatedLesson = lessonService.updateLesson(id, dto);
         return new ResponseEntity<>(updatedLesson, HttpStatus.OK);
     }
-    
+    // Delete lesson by id @todo add user role check once it is ready.
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteLesson(@PathVariable String id) {
         lessonService.deleteLesson(id);
