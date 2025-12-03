@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.dao.DuplicateKeyException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -83,11 +84,11 @@ class UserControllerTest {
                 + "\"role\": \"STUDENT\""
                 + "}";
 
-        when(userService.createUser(any(UserCreateDTO.class))).thenThrow(new RuntimeException("Duplicate user"));
+        when(userService.createUser(any(UserCreateDTO.class))).thenThrow(new DuplicateKeyException("Duplicate user"));
 
         mockMvc.perform(post("/api/user")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(duplicateUserJson))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isConflict()); // Expecting 409 Conflict due to duplicate
     }
 }
