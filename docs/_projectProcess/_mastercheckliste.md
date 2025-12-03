@@ -10,12 +10,12 @@
 
 ### GitHub Repository Setup
 
-- [ ] Repo ist auf "private" gestellt.
+- [x] Repo ist auf "private" gestellt.
 - [ ] Dozenten als Collaborators hinzugefügt (DavidZhaw, mosazhaw, mmeisterhans, bkuehnis).
-- [ ] **Scrum Board** (Projects) erstellt mit Spalten: `Ready`, `In Progress`, `Done`, `Closed`.
-- [ ] Sprints (Iterations) sind eingerichtet.
-- [ ] **Issues** gepflegt: Jedes Issue hat Beschreibung & Akzeptanzkriterien.
-- [ ] **Labels** genutzt: Mind. 3 Stück (z.B. `feature`, `bug`, `chore`).
+- [x] **Scrum Board** (Projects) erstellt mit Spalten: `Ready`, `In Progress`, `Done`, `Closed`.
+- [x] Sprints (Iterations) sind eingerichtet.
+- [x] **Issues** gepflegt: Jedes Issue hat Beschreibung & Akzeptanzkriterien.
+- [x] **Labels** genutzt: Mind. 3 Stück (z.B. `feature`, `bug`, `chore`).
 
 ### Meilensteine & Abgaben
 
@@ -41,18 +41,18 @@
 
 ### Phase 1: Setup & Architektur (Woche 1-3)
 
-- [ ] Spring Boot Projekt aufsetzen (Java 21+, Maven).
-- [ ] Ordnerstruktur: `Models`, `Controller`, `Repository`, `Services`.
+- [x] Spring Boot Projekt aufsetzen (Java 21+, Maven).
+- [x] Ordnerstruktur: `Models`, `Controller`, `Repository`, `Services`.
 - [ ] Svelte Frontend aufsetzen.
 - [ ] **CI/CD:** GitHub Action für Build & Test bei jedem Push.
 - [ ] **Deployment:** "Hello World" Container läuft auf Azure App Service.
 
 ### Phase 2: Core Features & Daten (Woche 4-6)
 
-- [ ] **Datenbank:** MongoDB Atlas verbunden.
+- [x] **Datenbank:** MongoDB Atlas verbunden.
 - [ ] **Security:** Auth0 Login implementiert (Frontend & Backend).
-- [ ] **Rollen:** Mind. 2 Rollen eingerichtet (z.B. `Student`, `Mentor`).
-- [ ] **Entitäten:** 3 Collections erstellt (z.B. User, Course, Quiz).
+- [x] **Rollen:** Mind. 2 Rollen eingerichtet (z.B. `Student`, `Mentor`).
+- [ ] **Entitäten:** 3 Collections erstellt (z.B. User, Course, Quiz). - user ist fertig.
   - [ ] Ownership: Eine Entität gehört fest einem User.
 
 ### Phase 3: Logik & KI (Woche 7-11)
@@ -62,8 +62,10 @@
 
 ### Phase 4: Testing & Quality (Laufend!)
 
-- [ ] **Unit Tests:** JUnit 5 mit Mockito.
-- [ ] **Integration Tests:** `@SpringBootTest` & `@MockMvc` für Controller.
+- [x] **Unit Tests:** JUnit 5 mit Mockito.
+- [x] **Integration Tests:** `@SpringBootTest` & `@MockMvc` für Controller.
+- [x] **Parametrized Tests:** UserRepository Tests mit `@ParameterizedTest`.
+- [ ] **Testabdeckung:** Mind. 90% Coverage für Service-Layer.
 - [ ] **Automatisierung:** Tests laufen in GitHub Action.
 - [ ] **Coverage:** JaCoCo eingebunden -> **Ziel: 90% Abdeckung**.
 - [ ] SonarQube Analyse (Optional für Bonus).

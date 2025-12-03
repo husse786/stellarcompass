@@ -17,17 +17,12 @@ import ch.zhaw.stellarcompass.service.UserService;
 public class UserController {
 
     @Autowired
-    private UserService userService;
+    private UserService userService; // Service layer for business logic and data access
 
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody UserCreateDTO userDTO) {
-        try {
-            User createdUser = userService.createUser(userDTO);
-            return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
-        } catch (Exception e) {
-            // for example duplicate key exception for same email
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        User createdUser = userService.createUser(userDTO);
+        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -44,4 +39,17 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable String id, @RequestBody UserCreateDTO userDTO) {
+        User updatedUser = userService.updateUser(id, userDTO);
+        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable String id) {
+        userService.deleteUser(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204 No Content ist Standard für Delete
+    }
+
 }

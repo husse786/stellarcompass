@@ -32,4 +32,23 @@ public class UserService {
     public Optional<User> getUserById(String id) {
         return userRepository.findById(id);
     }
+        // UPDATE
+    public User updateUser(String id, UserCreateDTO userDTO) {
+        return userRepository.findById(id).map(user -> {
+            user.setEmail(userDTO.getEmail());
+            user.setName(userDTO.getName());
+            user.setRole(userDTO.getRole());
+            // Auth0Id updaten wir hier meistens nicht, ist aber optional möglich
+            return userRepository.save(user);
+        }).orElseThrow(() -> new java.util.NoSuchElementException("User mit ID " + id + " nicht gefunden"));
+    }
+
+    // DELETE
+    public void deleteUser(String id) {
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+        } else {
+            throw new java.util.NoSuchElementException("User mit ID " + id + " nicht gefunden");
+        }
+    }
 }
