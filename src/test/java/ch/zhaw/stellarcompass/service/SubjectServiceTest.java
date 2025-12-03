@@ -8,12 +8,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
 import ch.zhaw.stellarcompass.dto.SubjectCreateDTO;
 import ch.zhaw.stellarcompass.model.Subject;
 import ch.zhaw.stellarcompass.repository.SubjectRepository;
 
 @SpringBootTest
+@ActiveProfiles("test")
 class SubjectServiceTest {
 
     @Autowired

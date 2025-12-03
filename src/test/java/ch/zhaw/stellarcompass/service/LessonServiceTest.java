@@ -13,6 +13,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
 import ch.zhaw.stellarcompass.dto.LessonCreateDTO;
 import ch.zhaw.stellarcompass.model.Lesson;
@@ -20,6 +21,7 @@ import ch.zhaw.stellarcompass.repository.LessonRepository;
 import ch.zhaw.stellarcompass.repository.SubjectRepository;
 
 @SpringBootTest
+@ActiveProfiles("test")
 class LessonServiceTest {
 
     @Autowired

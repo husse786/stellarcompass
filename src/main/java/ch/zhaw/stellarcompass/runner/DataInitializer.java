@@ -2,6 +2,7 @@ package ch.zhaw.stellarcompass.runner;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import ch.zhaw.stellarcompass.model.Lesson;
@@ -17,6 +18,8 @@ import ch.zhaw.stellarcompass.repository.SubjectRepository;
  */
 
 @Component
+@Profile("!test") // Do not run this initializer when the 'test' profile is active since I use mockito there.
+//this data initializer is only for development, fronted and manual testing purposes
 public class DataInitializer implements CommandLineRunner {
 
     @Autowired
