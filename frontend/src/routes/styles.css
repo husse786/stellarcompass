@@ -1,0 +1,7 @@
+/* Import Bootstrap CSS */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+/* Eigene globale Styles können hier folgen */
+body {
+    background-color: #f8f9fa;
+}
