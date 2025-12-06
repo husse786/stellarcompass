@@ -18,7 +18,7 @@ COPY src src
 COPY frontend frontend
 
 # 1. Build frontend
-RUN cd frontend && npm ci && npm run build
+RUN cd frontend && npm ci && npx svelte-kit sync && npm run build
 
 # 2. Build backend
 RUN sed -i 's/\r$//' mvnw && chmod +x mvnw
