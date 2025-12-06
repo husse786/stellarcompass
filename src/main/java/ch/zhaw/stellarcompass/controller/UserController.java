@@ -4,12 +4,15 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import ch.zhaw.stellarcompass.dto.UserCreateDTO;
 import ch.zhaw.stellarcompass.model.User;
+import ch.zhaw.stellarcompass.repository.UserRepository;
 import ch.zhaw.stellarcompass.service.UserService;
 
 @RestController
@@ -18,6 +21,9 @@ public class UserController {
 
     @Autowired
     private UserService userService; // Service layer for business logic and data access
+
+    @Autowired
+    private UserRepository userRepository;
 
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody UserCreateDTO userDTO) {
@@ -39,17 +45,39 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
+    
+    // Update user: only Admins or Mentor or the user himself
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable String id, @RequestBody UserCreateDTO userDTO) {
+        if(!userService.userHasRole("ADMIN") && !userService.userHasRole("MENTOR")){
+            String email = userService.getEmail();
+            Optional<User> userOpt = userService.getUserById(id);
+            if(userOpt.isEmpty() || !userOpt.get().getEmail().equals(email)){
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            }
+        }
         User updatedUser = userService.updateUser(id, userDTO);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable String id) {
+        if(!userService.userHasRole("ADMIN")){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         userService.deleteUser(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204 No Content ist Standard für Delete
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<User> getMyProfile( @AuthenticationPrincipal Jwt jwt) {
+        String email = jwt.getClaimAsString("email");
+        if(email == null){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        return userRepository.findByEmail(email)
+                .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+            }
 
 }

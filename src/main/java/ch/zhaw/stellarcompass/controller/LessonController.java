@@ -12,6 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ch.zhaw.stellarcompass.dto.LessonCreateDTO;
 import ch.zhaw.stellarcompass.model.Lesson;
 import ch.zhaw.stellarcompass.service.LessonService;
+import ch.zhaw.stellarcompass.service.UserService;
 import jakarta.validation.Valid;
 
 @RestController
@@ -20,9 +21,15 @@ public class LessonController {
 
     @Autowired
     private LessonService lessonService;
+    @Autowired
+    private UserService userService;
 
+    // Create lesson: only Admins and Mentors
     @PostMapping
     public ResponseEntity<Lesson> createLesson(@Valid @RequestBody LessonCreateDTO dto) { //validation added
+        if(!userService.userHasRole("ADMIN") && !userService.userHasRole("MENTOR")){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         Lesson createdLesson = lessonService.createLesson(dto);
         // Location header for Rest confrom - best practice
         URI location = ServletUriComponentsBuilder
@@ -34,6 +41,7 @@ public class LessonController {
         return ResponseEntity.created(location).body(createdLesson);
     }
 
+    // Read lessons: all authenticated users
     @GetMapping
     public ResponseEntity<List<Lesson>> getAllLessons() {
         return new ResponseEntity<>(lessonService.getAllLessons(), HttpStatus.OK);
@@ -51,15 +59,22 @@ public class LessonController {
     public ResponseEntity<List<Lesson>> getLessonsBySubject(@PathVariable String subjectId) {
         return new ResponseEntity<>(lessonService.getLessonsBySubject(subjectId), HttpStatus.OK);
     }
-    // Update lesson which has valid id
+
+    // Update lesson which has valid id: only Admins and Mentors
     @PutMapping("/{id}")
     public ResponseEntity<Lesson> updateLesson(@PathVariable String id, @Valid @RequestBody LessonCreateDTO dto) { //validation added
+        if(!userService.userHasRole("ADMIN") && !userService.userHasRole("MENTOR")){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         Lesson updatedLesson = lessonService.updateLesson(id, dto);
         return new ResponseEntity<>(updatedLesson, HttpStatus.OK);
     }
-    // Delete lesson by id @todo add user role check once it is ready.
+    // Delete lesson by id: only Admins
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteLesson(@PathVariable String id) {
+        if(!userService.userHasRole("ADMIN")){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         lessonService.deleteLesson(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

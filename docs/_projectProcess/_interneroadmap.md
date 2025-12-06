@@ -18,15 +18,15 @@
 ### Woche 2: Boards & Code Init
 
 - [x] [cite_start]**Abgabe:** Explore/Create/Evaluate Boards auf Moodle hochladen[cite: 76].
-- [ ] **Backend:** Spring Boot Projekt initialisieren (Web, Data-MongoDB, Security Dependencies).
-- [ ] **Frontend:** Svelte Projekt initialisieren.
+- [x] **Backend:** Spring Boot Projekt initialisieren (Web, Data-MongoDB, Security Dependencies).
+- [x] **Frontend:** Svelte Projekt initialisieren.
 - [ ] **Pipeline V1:** GitHub Action erstellen, die bei Push baut (`mvn clean verify`).
 
 ### Woche 3: Deployment & Review
 
-- [ ] [cite_start]**Peer-Review:** Boards der anderen bewerten[cite: 77].
+- [x] [cite_start]**Peer-Review:** Boards der anderen bewerten[cite: 77].
 - [ ] **Cloud:** Dockerfile erstellen. App auf Azure App Service deployen.
-  - [cite_start]*Meilenstein:* "Hello World" ist unter einer öffentlichen URL erreichbar[cite: 90].
+- [x] [cite_start]*Meilenstein:* "Hello World" ist unter einer öffentlichen URL erreichbar[cite: 90].
 
 ---
 
@@ -36,21 +36,21 @@
 
 ### Woche 4: Pitch Fokus
 
-- [ ] [cite_start]**Pitch Deck:** Finalisieren und abgeben[cite: 78].
-- [ ] **Probelauf:** Pitch 3-4 mal üben (Timing!).
-- [ ] **Tech:** MongoDB Atlas Cluster erstellen und Connection-String im Backend hinterlegen (Secrets in GitHub!).
+- [x] [cite_start]**Pitch Deck:** Finalisieren und abgeben[cite: 78].
+- [x] **Probelauf:** Pitch 3-4 mal üben (Timing!).
+- [x] **Tech:** MongoDB Atlas Cluster erstellen und Connection-String im Backend hinterlegen (Secrets in GitHub!).
 
 ### Woche 5: Der Pitch & Security
 
-- [ ] [cite_start]**EVENT:** Pitch vor der Klasse halten[cite: 79].
-- [ ] **Security:** Auth0 Account erstellen.
-- [ ] **Code:** Spring Security so konfigurieren, dass Endpoints geschützt sind. Login im Svelte Frontend einbauen.
+- [x] [cite_start]**EVENT:** Pitch vor der Klasse halten[cite: 79].
+- [x] **Security:** Auth0 Account erstellen.
+- [x] **Code:** Spring Security so konfigurieren, dass Endpoints geschützt sind. Login im Svelte Frontend einbauen.
 
 ### Woche 6: Datenstruktur
 
-- [ ] **Backend:** Entities in Java erstellen (User, Course, Quiz).
-- [ ] **DB:** Repositories anlegen. Testen, ob Daten in MongoDB gespeichert werden.
-- [ ] **Testing:** Erste JUnit Tests für die Repositories schreiben.
+- [x] **Backend:** Entities in Java erstellen (User, Course, Quiz).
+- [x] **DB:** Repositories anlegen. Testen, ob Daten in MongoDB gespeichert werden.
+- [x] **Testing:** Erste JUnit Tests für die Repositories schreiben.
 
 ---
 
@@ -60,14 +60,14 @@
 
 ### Woche 7: Business Logik
 
-- [ ] **Feature:** "Kurs belegen" implementieren.
+- [x] **Feature:** "Kurs belegen" implementieren.
 - [ ] [cite_start]**Zustandsmaschine:** Logik bauen für Statuswechsel (z.B. `ENROLLED` -> `IN_PROGRESS` -> `COMPLETED`)[cite: 96].
-- [ ] **Tests:** Unit-Tests für die Service-Layer schreiben (Logik absichern).
+- [x] **Tests:** Unit-Tests für die Service-Layer schreiben (Logik absichern).
 
 ### Woche 8: UI Bauen (Svelte)
 
 - [ ] **Frontend:** Kurs-Übersicht und Detail-Seite bauen.
-- [ ] **API:** Frontend an das Spring Boot Backend anbinden (Fetch Data).
+- [x] **API:** Frontend an das Spring Boot Backend anbinden (Fetch Data).
 - [ ] [cite_start]**Ownership:** Sicherstellen, dass User nur *ihre* Daten sehen[cite: 96].
 
 ### Woche 9: Integration
