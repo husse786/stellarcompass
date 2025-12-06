@@ -1,5 +1,11 @@
 # Stellar Compass
 
+## Baddges
+
+![Workflow](https://github.com/husse786/stellarcompass/actions/workflows/ci-badge.yml/badge.svg)
+![Coverage](https://github.com/husse786/stellarcompass/blob/main/.github/badges/jacoco.svg)
+![Branches](https://github.com/husse786/stellarcompass/blob/main/.github/badges/branches.svg)
+
 Eine digitale Schule für Frauen in Afghanistan.
 
 ## Akteure
