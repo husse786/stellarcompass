@@ -11,6 +11,7 @@ import ch.zhaw.stellarcompass.dto.SubjectCreateDTO;
 import ch.zhaw.stellarcompass.model.Subject;
 import ch.zhaw.stellarcompass.service.SubjectService;
 import ch.zhaw.stellarcompass.service.UserService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/subject")
@@ -22,7 +23,7 @@ public class SubjectController {
     private UserService userService;
     // CREATE: only Admins and Mentors
     @PostMapping
-    public ResponseEntity<Subject> createSubject(@RequestBody SubjectCreateDTO subjectDTO) {
+    public ResponseEntity<Subject> createSubject(@Valid @RequestBody SubjectCreateDTO subjectDTO) {
         if(!userService.userHasRole("ADMIN") && !userService.userHasRole("MENTOR")){
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
@@ -37,7 +38,7 @@ public class SubjectController {
 
     // UPDATE: only Admins and Mentors
     @PutMapping("/{id}")
-    public ResponseEntity<Subject> updateSubject(@PathVariable String id, @RequestBody SubjectCreateDTO dto) {
+    public ResponseEntity<Subject> updateSubject(@PathVariable String id, @Valid @RequestBody SubjectCreateDTO dto) {
         if(!userService.userHasRole("ADMIN") && !userService.userHasRole("MENTOR")){
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }

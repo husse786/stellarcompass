@@ -18,18 +18,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+            .csrf(csrf -> csrf.disable()) // Disable CSRF for REST API with JWT
             .authorizeHttpRequests(authorize -> authorize
-            // Permit all requests to root, static resources, and public API endpoints
-                .requestMatchers("/*").permitAll()
-            // Require authentication for all other API endpoints
+            // Permit all requests to root, static resources, and public endpoints
+                .requestMatchers("/", "/assets/**", "/static/**").permitAll()
+            // Require authentication for all API endpoints
                 .requestMatchers("/api/**").authenticated()
             // Permit all other requests (e.g., frontend routes)
-                .requestMatchers("/**").permitAll()           
+                .anyRequest().permitAll()           
             )
             .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()));
 
         return http.build();
     }
 }
-
 

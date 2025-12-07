@@ -1,6 +1,6 @@
 # Stellar Compass
 
-## Baddges
+## Badges
 
 ![Workflow](https://github.com/husse786/stellarcompass/actions/workflows/ci-badge.yml/badge.svg)
 ![Coverage](https://github.com/husse786/stellarcompass/blob/main/.github/badges/jacoco.svg)
@@ -16,7 +16,7 @@ Eine digitale Schule für Frauen in Afghanistan.
 
 ## Use Case Diagramm
 
-**Beshreibung von Use Case** [Use Case Beschreibung](docs/use-case-description.md)
+**Beschreibung von Use Case** [Use Case Beschreibung](docs/use-case-description.md)
 
 ![Use Case Diagramm](docs/visuals/uc_diagram.drawio.svg)
 

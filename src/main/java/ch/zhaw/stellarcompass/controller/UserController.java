@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
+
 import ch.zhaw.stellarcompass.dto.UserCreateDTO;
 import ch.zhaw.stellarcompass.model.User;
 import ch.zhaw.stellarcompass.repository.UserRepository;
@@ -26,7 +28,7 @@ public class UserController {
     private UserRepository userRepository;
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody UserCreateDTO userDTO) {
+    public ResponseEntity<User> createUser(@Valid @RequestBody UserCreateDTO userDTO) {
         User createdUser = userService.createUser(userDTO);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
@@ -48,7 +50,7 @@ public class UserController {
     
     // Update user: only Admins or Mentor or the user himself
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable String id, @RequestBody UserCreateDTO userDTO) {
+    public ResponseEntity<User> updateUser(@PathVariable String id, @Valid @RequestBody UserCreateDTO userDTO) {
         if(!userService.userHasRole("ADMIN") && !userService.userHasRole("MENTOR")){
             String email = userService.getEmail();
             Optional<User> userOpt = userService.getUserById(id);
@@ -70,14 +72,10 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<User> getMyProfile( @AuthenticationPrincipal Jwt jwt) {
-        String email = jwt.getClaimAsString("email");
-        if(email == null){
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-        return userRepository.findByEmail(email)
+    public ResponseEntity<User> getMyProfile() {
+        return userService.getMyProfile()
                 .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-            }
+                .orElse(new ResponseEntity<>(HttpStatus.UNAUTHORIZED));
+    }
 
 }

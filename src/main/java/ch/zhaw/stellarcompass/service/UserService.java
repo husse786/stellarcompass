@@ -79,4 +79,13 @@ public class UserService {
             throw new java.util.NoSuchElementException("User mit ID " + id + " nicht gefunden");
         }
     }
+
+    // Get current user's profile
+    public Optional<User> getMyProfile() {
+        String email = getEmail();
+        if (email == null) {
+            return Optional.empty();
+        }
+        return getUserByEmail(email);
+    }
 }

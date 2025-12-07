@@ -1,5 +1,7 @@
 package ch.zhaw.stellarcompass.exception;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,8 @@ import java.util.NoSuchElementException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     // Catches validation errors from @Valid -> 400 Bad Request
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -49,9 +53,12 @@ public class GlobalExceptionHandler {
     // Catches general errors -> 500 (as a fallback)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleGeneral(Exception ex) {
+        // Log the actual exception for debugging
+        log.error("Unexpected error occurred", ex);
+        
         Map<String, String> error = new HashMap<>();
         error.put("error", "Internal Server Error");
-        error.put("message", ex.getMessage());
+        error.put("message", "An unexpected error occurred. Please contact support if the problem persists.");
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
