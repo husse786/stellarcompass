@@ -29,6 +29,7 @@ import org.springframework.dao.DuplicateKeyException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.zhaw.stellarcompass.dto.UserCreateDTO;
+import ch.zhaw.stellarcompass.dto.UserUpdateDTO;
 import ch.zhaw.stellarcompass.model.User;
 import ch.zhaw.stellarcompass.model.UserRole;
 import ch.zhaw.stellarcompass.repository.UserRepository;
@@ -355,6 +356,186 @@ class UserControllerTest {
         // Act & Assert
         mockMvc.perform(delete("/api/user/student-id")
                 .header("Authorization", TestSecurityConfig.MENTOR))
+                .andExpect(status().isForbidden());
+    }
+
+    // Test partial update - only bio
+    @Test
+    void testUpdateMyProfile_PartialUpdate_OnlyBio() throws Exception {
+        String email = "student@stellar.com";
+        UserUpdateDTO updateDTO = new UserUpdateDTO(null, "New Bio Text", null);
+        
+        User updatedUser = new User();
+        updatedUser.setEmail(email);
+        updatedUser.setName("Old Name");
+        updatedUser.setBio("New Bio Text");
+        
+        when(userService.updateUserProfile(eq(email), any(UserUpdateDTO.class))).thenReturn(updatedUser);
+        
+        mockMvc.perform(put("/api/user/me")
+                .header("Authorization", TestSecurityConfig.STUDENT)
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(updateDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.bio").value("New Bio Text"));
+    }
+
+    // Test partial update - only avatarUrl
+    @Test
+    void testUpdateMyProfile_PartialUpdate_OnlyAvatar() throws Exception {
+        String email = "student@stellar.com";
+        UserUpdateDTO updateDTO = new UserUpdateDTO(null, null, "http://newavatar.jpg");
+        
+        User updatedUser = new User();
+        updatedUser.setEmail(email);
+        updatedUser.setName("Old Name");
+        updatedUser.setAvatarUrl("http://newavatar.jpg");
+        
+        when(userService.updateUserProfile(eq(email), any(UserUpdateDTO.class))).thenReturn(updatedUser);
+        
+        mockMvc.perform(put("/api/user/me")
+                .header("Authorization", TestSecurityConfig.STUDENT)
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(updateDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.avatarUrl").value("http://newavatar.jpg"));
+    }
+
+    // Test update with empty/blank name - should be ignored
+    @Test
+    void testUpdateMyProfile_BlankName_ShouldBeIgnored() throws Exception {
+        String email = "student@stellar.com";
+        UserUpdateDTO updateDTO = new UserUpdateDTO("   ", "New Bio", null);
+        
+        User updatedUser = new User();
+        updatedUser.setEmail(email);
+        updatedUser.setName("Old Name"); // Name should NOT change
+        updatedUser.setBio("New Bio");
+        
+        when(userService.updateUserProfile(eq(email), any(UserUpdateDTO.class))).thenReturn(updatedUser);
+        
+        mockMvc.perform(put("/api/user/me")
+                .header("Authorization", TestSecurityConfig.STUDENT)
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(updateDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Old Name"));
+    }
+
+    // Test that admin can also update their own profile
+    @Test
+    void testUpdateMyProfile_AsAdmin_Success() throws Exception {
+        String email = "admin@stellar.com";
+        UserUpdateDTO updateDTO = new UserUpdateDTO("Admin Updated", "Admin bio", null);
+        
+        User updatedUser = new User();
+        updatedUser.setEmail(email);
+        updatedUser.setName("Admin Updated");
+        updatedUser.setBio("Admin bio");
+        updatedUser.setRole(UserRole.ADMIN);
+        
+        when(userService.updateUserProfile(eq(email), any(UserUpdateDTO.class))).thenReturn(updatedUser);
+        
+        mockMvc.perform(put("/api/user/me")
+                .header("Authorization", TestSecurityConfig.ADMIN)
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(updateDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Admin Updated"))
+                .andExpect(jsonPath("$.role").value("ADMIN")); // Role should NOT change
+    }
+
+    // Test that mentor can update their own profile
+    @Test
+    void testUpdateMyProfile_AsMentor_Success() throws Exception {
+        String email = "mentor@stellar.com";
+        UserUpdateDTO updateDTO = new UserUpdateDTO("Mentor Name", "I mentor students", "http://mentor.jpg");
+        
+        User updatedUser = new User();
+        updatedUser.setEmail(email);
+        updatedUser.setName("Mentor Name");
+        updatedUser.setBio("I mentor students");
+        updatedUser.setAvatarUrl("http://mentor.jpg");
+        updatedUser.setRole(UserRole.MENTOR);
+        
+        when(userService.updateUserProfile(eq(email), any(UserUpdateDTO.class))).thenReturn(updatedUser);
+        
+        mockMvc.perform(put("/api/user/me")
+                .header("Authorization", TestSecurityConfig.MENTOR)
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(updateDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Mentor Name"))
+                .andExpect(jsonPath("$.bio").value("I mentor students"));
+    }
+
+    // Test user not found in database (edge case)
+    @Test
+    void testUpdateMyProfile_UserNotFound() throws Exception {
+        String email = "student@stellar.com";
+        UserUpdateDTO updateDTO = new UserUpdateDTO("New Name", null, null);
+        
+        when(userService.updateUserProfile(eq(email), any(UserUpdateDTO.class)))
+                .thenThrow(new RuntimeException("User not found with email: " + email));
+        
+        mockMvc.perform(put("/api/user/me")
+                .header("Authorization", TestSecurityConfig.STUDENT)
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(updateDTO)))
+                .andExpect(status().isInternalServerError());
+    }
+
+    // Test empty body (all fields null)
+    @Test
+    void testUpdateMyProfile_EmptyBody() throws Exception {
+        String email = "student@stellar.com";
+        UserUpdateDTO updateDTO = new UserUpdateDTO(null, null, null);
+        
+        User unchangedUser = new User();
+        unchangedUser.setEmail(email);
+        unchangedUser.setName("Old Name");
+        unchangedUser.setBio("Old Bio");
+        
+        when(userService.updateUserProfile(eq(email), any(UserUpdateDTO.class))).thenReturn(unchangedUser);
+        
+        mockMvc.perform(put("/api/user/me")
+                .header("Authorization", TestSecurityConfig.STUDENT)
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(updateDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Old Name")); // Nothing changed
+    }
+
+    @Test
+    void testUpdateMyProfile_Success() throws Exception {
+        // Arrange
+        String email = "student@stellar.com";
+        UserUpdateDTO updateDTO = new UserUpdateDTO("Neuer Name", "Meine Bio", "http://avatar.jpg");
+        
+        User updatedUser = new User();
+        updatedUser.setEmail(email);
+        updatedUser.setName("Neuer Name");
+        updatedUser.setBio("Meine Bio");
+
+        // Mock Service - FIXED: updateUserProfile instead of updateUser
+        when(userService.updateUserProfile(eq(email), any(UserUpdateDTO.class))).thenReturn(updatedUser);
+
+        // Act & Assert
+        mockMvc.perform(put("/api/user/me")
+                .header("Authorization", TestSecurityConfig.STUDENT)
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(updateDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Neuer Name"))
+                .andExpect(jsonPath("$.bio").value("Meine Bio"));
+    }
+
+    @Test
+    void testUpdateMyProfile_Unauthorized() throws Exception {
+        // Versuchen ohne Token zuzugreifen
+        mockMvc.perform(put("/api/user/me")
+                .contentType("application/json")
+                .content("{}"))
                 .andExpect(status().isForbidden());
     }
 }

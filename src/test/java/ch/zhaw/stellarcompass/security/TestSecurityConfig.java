@@ -41,7 +41,7 @@ public class TestSecurityConfig {
         Map<String, Object> claims = new HashMap<>();
         claims.put("sub", sub);
         claims.put("email", email);
-        claims.put("user_roles", Arrays.asList(role)); //Important: list of roles
+        claims.put("user_roles", Arrays.asList(role.toUpperCase())); //Important: list of roles
 
         return new Jwt(
                 tokenFromSub(sub),

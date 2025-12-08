@@ -1,5 +1,6 @@
 package ch.zhaw.stellarcompass.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,6 +10,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import ch.zhaw.stellarcompass.dto.UserCreateDTO;
+import ch.zhaw.stellarcompass.dto.UserUpdateDTO;
 import ch.zhaw.stellarcompass.model.User;
 import ch.zhaw.stellarcompass.repository.UserRepository;
 
@@ -47,6 +49,7 @@ public class UserService {
         if (userDTO.getAuth0Id() != null) {
             user.setAuth0Id(userDTO.getAuth0Id());
         }
+        user.setJoinDate(LocalDate.now()); // Set join date to today
         return userRepository.save(user);
     }
 
@@ -60,7 +63,7 @@ public class UserService {
     public Optional<User> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
-    // UPDATE
+    // UPDATE for admin purposes including role and email
     public User updateUser(String id, UserCreateDTO userDTO) {
         return userRepository.findById(id).map(user -> {
             user.setEmail(userDTO.getEmail());
@@ -69,6 +72,26 @@ public class UserService {
             // Auth0Id updaten wir hier meistens nicht, ist aber optional möglich
             return userRepository.save(user);
         }).orElseThrow(() -> new java.util.NoSuchElementException("User mit ID " + id + " nicht gefunden"));
+    }
+
+    // UPDATE for user profile (name, bio, avatarUrl)
+    public User updateUserProfile(String email, UserUpdateDTO dto) {
+        // 1. Search user
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+
+        // 2. Update fields (only if they are provided in the DTO)
+        if (dto.getName() != null && !dto.getName().isBlank()) {
+            user.setName(dto.getName());
+        }
+
+        if (dto.getBio() != null) {
+            user.setBio(dto.getBio());
+        }
+        if (dto.getAvatarUrl() != null) {
+            user.setAvatarUrl(dto.getAvatarUrl());}
+        // 3. Save updated user
+        return userRepository.save(user);
     }
 
     // DELETE
