@@ -505,7 +505,7 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Old Name")); // Nothing changed
     }
-
+    // Test full update of profile
     @Test
     void testUpdateMyProfile_Success() throws Exception {
         // Arrange
@@ -529,7 +529,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.name").value("Neuer Name"))
                 .andExpect(jsonPath("$.bio").value("Meine Bio"));
     }
-
+    // Test unauthorized access (no token)
     @Test
     void testUpdateMyProfile_Unauthorized() throws Exception {
         // Versuchen ohne Token zuzugreifen
